@@ -1,46 +1,58 @@
 package SpringAndDB;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.List;
 
 @SpringBootApplication
 public class Main {
-    public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
-        UserController userController = context.getBean(UserController.class);
 
-        createUser(userController);
-        updateUser(userController);
-        deleteUser(userController);
-        getById(userController);
-        getAll(userController);
+    private static UserController userController;
+
+    @Autowired
+    public Main(UserController userController) {
+        this.userController = userController;
     }
 
-    private static void createUser(UserController userController) {
+    @Autowired
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
+        Main main = new Main(userController);
+        main.operations();
+    }
+
+    private void operations() {
+        createUser();
+        updateUser();
+        deleteUser();
+        getById();
+        getAll();
+    }
+
+    private void createUser() {
         User user = new User();
-        user.setFullName("T 1000");
+        user.setFullName("John Carter");
         userController.createUser(user);
     }
 
-    private static void updateUser(UserController userController) {
+    private void updateUser() {
         User user = new User();
         user.setFullName("Black Betty");
-        userController.updateUser(10L, user);
+        userController.updateUser(15L, user);
     }
 
-    private static void deleteUser(UserController userController) {
-        userController.deleteUser(11L);
+    private void deleteUser() {
+        userController.deleteUser(2L);
     }
 
-    private static void getById(UserController userController) {
-        User userById = userController.getUserById(2L);
+    private void getById() {
+        User userById = userController.getUserById(6L);
         System.out.println(userById);
     }
 
-    private static void getAll(UserController userController) {
+    private void getAll() {
         List<User> allUsers = userController.getAllUsers();
         System.out.println(allUsers);
     }
